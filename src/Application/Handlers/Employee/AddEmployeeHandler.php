@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Application\Handlers\Employee;
 
-use App\Application\Command\Employee\AddEmployee;
+use App\Application\Command\Employee\EmployeeCommand;
 use App\Application\Handlers\Exceptions\CommandHandlerException;
 use App\Application\Shared\EmployeeDtoFactory;
 use App\DomainModel\CompanyRepository;
@@ -19,7 +19,7 @@ final readonly class AddEmployeeHandler
     ) {
     }
 
-    public function handle(AddEmployee $command): void
+    public function handle(EmployeeCommand $command): void
     {
         $this->assertCompanyExists($command);
         $this->assertEmployeeNotExists($command);
@@ -27,7 +27,7 @@ final readonly class AddEmployeeHandler
         $this->companyRepository->addEmployee($this->employeeDtoFactory->fromCommand($command));
     }
 
-    private function assertCompanyExists(AddEmployee $command): void
+    private function assertCompanyExists(EmployeeCommand $command): void
     {
         $taxIdNumberExists = $this->companyRepository->companyExists($command->getCompanyId());
         if (!$taxIdNumberExists) {
@@ -35,7 +35,7 @@ final readonly class AddEmployeeHandler
         }
     }
 
-    private function assertEmployeeNotExists(AddEmployee $command): void
+    private function assertEmployeeNotExists(EmployeeCommand $command): void
     {
         if ($this->employeeRepository->employeeExistsInCompany($this->employeeDtoFactory->fromCommand($command))) {
             throw CommandHandlerException::employeeAlreadyExistsInCompany();

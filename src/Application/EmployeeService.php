@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Application;
 
-use App\Application\Command\Employee\AddEmployee;
 use App\Application\Command\Employee\EmployeeCommand;
 use App\Application\Handlers\Employee\AddEmployeeHandler;
 use App\Application\Handlers\Employee\DeleteEmployeeHandler;
@@ -21,7 +20,7 @@ readonly class EmployeeService
     ) {
     }
 
-    public function add(AddEmployee $command): void
+    public function add(EmployeeCommand $command): void
     {
         $this->addHandler->handle($command);
     }

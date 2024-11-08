@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Controller;
 
-use App\Application\Command\Employee\AddEmployee;
 use App\Application\Command\Employee\EmployeeCommand;
 use App\Application\EmployeeService;
 use App\Controller\RequestDto\Employee\AddEmployeeDto;
@@ -31,7 +30,7 @@ class EmployeeController extends AbstractController
     #[Route('/api/employee', name: 'api_add_company_employee', methods: ['POST'])]
     public function addEmployee(#[MapRequestPayload] AddEmployeeDto $employeeDto): Response
     {
-        $command = new AddEmployee(
+        $command = new EmployeeCommand(
             $employeeDto->companyId,
             null,
             $employeeDto->name,

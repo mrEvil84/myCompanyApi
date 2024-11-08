@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Tests\Application\Handlers\Employee;
 
-use App\Application\Command\Employee\AddEmployee;
+use App\Application\Command\Employee\EmployeeCommand;
 use App\Application\Handlers\Employee\AddEmployeeHandler;
 use App\Application\Handlers\Exceptions\CommandHandlerException;
 use App\Application\Shared\EmployeeDtoFactory;
@@ -21,7 +21,7 @@ class AddEmployeeHandlerTest extends HandlersBaseTestCase
 
         $sut = new AddEmployeeHandler($this->companyRepoMock, $this->employeeRepoMock, new EmployeeDtoFactory());
 
-        $sut->handle(new AddEmployee(
+        $sut->handle(new EmployeeCommand(
             1234,
             12,
             'John',
@@ -41,7 +41,7 @@ class AddEmployeeHandlerTest extends HandlersBaseTestCase
         $this->expectException(CommandHandlerException::class);
         $this->expectExceptionMessage('Company not found.');
 
-        $sut->handle(new AddEmployee(
+        $sut->handle(new EmployeeCommand(
             1234,
             12,
             'John',
@@ -62,7 +62,7 @@ class AddEmployeeHandlerTest extends HandlersBaseTestCase
         $this->expectException(CommandHandlerException::class);
         $this->expectExceptionMessage('Employee already exists in company.');
 
-        $sut->handle(new AddEmployee(
+        $sut->handle(new EmployeeCommand(
             1234,
             12,
             'John',
