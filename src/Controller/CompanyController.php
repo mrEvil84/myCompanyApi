@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Controller;
 
+use App\Application\Command\Company\AddCompany;
 use App\Application\Command\Company\ReplaceCompany;
 use App\Application\Command\Company\UpdateCompany;
 use App\Application\CompanyService;
@@ -54,7 +55,14 @@ class CompanyController extends AbstractController
     public function addCompany(#[MapRequestPayload] AddCompanyDto $addCompanyDto): Response
     {
         try {
-            $this->companyService->addCompany($addCompanyDto->getCommand());
+            $command = new AddCompany(
+                $addCompanyDto->taxIdNumber,
+                $addCompanyDto->name,
+                $addCompanyDto->address,
+                $addCompanyDto->city,
+                $addCompanyDto->postalCode
+            );
+            $this->companyService->addCompany($command);
             return $this->json([], Response::HTTP_CREATED);
         } catch (\Exception $exception) {
             return $this->json(['error' => $exception->getMessage()], Response::HTTP_BAD_REQUEST);

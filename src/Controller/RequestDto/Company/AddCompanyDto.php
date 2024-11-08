@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Controller\RequestDto\Company;
 
-use App\Application\Command\Company\AddCompany;
 use Symfony\Component\Validator\Constraints as Assert;
 
 class AddCompanyDto
@@ -22,16 +21,5 @@ class AddCompanyDto
         #[Assert\NotBlank()]
         public string $postalCode,
     ) {
-    }
-
-    public function getCommand(): AddCompany
-    {
-        return new AddCompany(
-            $this->taxIdNumber,
-            $this->name,
-            $this->address,
-            $this->city,
-            $this->postalCode
-        );
     }
 }
