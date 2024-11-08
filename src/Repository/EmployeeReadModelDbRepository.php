@@ -39,6 +39,4 @@ class EmployeeReadModelDbRepository extends ServiceEntityRepository implements E
             ->getQuery()
             ->getArrayResult();
     }
-
-
 }
