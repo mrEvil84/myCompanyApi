@@ -4,12 +4,12 @@ declare(strict_types=1);
 
 namespace App\Entity;
 
-use App\Repository\CompanyRepository;
+use App\Repository\CompanyReadModelDbRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
-#[ORM\Entity(repositoryClass: CompanyRepository::class)]
+#[ORM\Entity(repositoryClass: CompanyReadModelDbRepository::class)]
 class Company
 {
     #[ORM\Id]
@@ -17,8 +17,8 @@ class Company
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\Column(length: 255)]
-    private ?string $tax_id_number = null;
+    #[ORM\Column(name: 'tax_id_number', length: 255, unique: true, nullable: false)]
+    private ?string $taxIdNumber = null;
 
     #[ORM\Column(length: 255)]
     private ?string $name = null;
@@ -29,13 +29,13 @@ class Company
     #[ORM\Column(length: 255)]
     private ?string $city = null;
 
-    #[ORM\Column(length: 255)]
-    private ?string $postal_code = null;
+    #[ORM\Column(name: 'postal_code', length: 255, unique: false, nullable: false)]
+    private ?string $postalCode = null;
 
     /**
      * @var Collection<int, Employee>
      */
-    #[ORM\OneToMany(targetEntity: Employee::class, mappedBy: 'company_id')]
+    #[ORM\OneToMany(targetEntity: Employee::class, mappedBy: 'company', cascade: ['remove', 'persist'])]
     private Collection $employees;
 
     public function __construct()
@@ -50,12 +50,12 @@ class Company
 
     public function getTaxIdNumber(): ?string
     {
-        return $this->tax_id_number;
+        return $this->taxIdNumber;
     }
 
-    public function setTaxIdNumber(string $tax_id_number): static
+    public function setTaxIdNumber(string $taxIdNumber): static
     {
-        $this->tax_id_number = $tax_id_number;
+        $this->taxIdNumber = $taxIdNumber;
 
         return $this;
     }
@@ -98,12 +98,12 @@ class Company
 
     public function getPostalCode(): ?string
     {
-        return $this->postal_code;
+        return $this->postalCode;
     }
 
-    public function setPostalCode(string $postal_code): static
+    public function setPostalCode(string $postalCode): static
     {
-        $this->postal_code = $postal_code;
+        $this->postalCode = $postalCode;
 
         return $this;
     }

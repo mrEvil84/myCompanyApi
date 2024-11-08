@@ -2,14 +2,14 @@
 
 declare(strict_types=1);
 
-namespace App\Application\Handlers;
+namespace App\Application\Handlers\Company;
 
 use App\Application\Command\Company\UpdateCompany;
-use App\Application\Exceptions\UpdateCompanyException;
+use App\Application\Handlers\Exceptions\CommandHandlerException;
 use App\Application\Shared\CompanyDto;
 use App\DomainModel\CompanyRepository;
 
-readonly class UpdateCompanyHandler
+final readonly class UpdateCompanyHandler
 {
     public function __construct(private CompanyRepository $companyRepository)
     {
@@ -17,24 +17,24 @@ readonly class UpdateCompanyHandler
 
     public function handle(UpdateCompany $command): void
     {
+        $this->assertCompanyExists($command->getCompanyId());
         $this->assertTaxIdNumber($command->getTaxIdNumber());
-        $this->assertCompanyExists($command);
 
         $this->update($command);
     }
 
-    private function assertCompanyExists(UpdateCompany $command): void
+    private function assertCompanyExists(int $companyId): void
     {
-        $taxIdNumberExists = $this->companyRepository->companyTaxIdNumberExists($command->getTaxIdNumber());
-        if (!$taxIdNumberExists) {
-            throw UpdateCompanyException::companyNotFound();
+        $companyExists = $this->companyRepository->companyExists($companyId);
+        if (!$companyExists) {
+            throw CommandHandlerException::companyNotFound();
         }
     }
 
-    private function assertTaxIdNumber(string $getTaxIdNumber): void
+    private function assertTaxIdNumber(?string $taxIdNumber): void
     {
-        if (strlen($getTaxIdNumber) < 10) {
-            throw UpdateCompanyException::taxIdNumberInvalid();
+        if ($taxIdNumber !== null && strlen($taxIdNumber) < 10) {
+            throw CommandHandlerException::taxIdNumberInvalid();
         }
     }
 

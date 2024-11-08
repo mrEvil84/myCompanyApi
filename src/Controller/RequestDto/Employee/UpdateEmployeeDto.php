@@ -6,30 +6,21 @@ namespace App\Controller\RequestDto\Employee;
 
 use Symfony\Component\Validator\Constraints as Assert;
 
-class UpdateEmployeeDto extends EmployeeDto
+class UpdateEmployeeDto
 {
     public function __construct(
-        #[Assert\NotBlank()]
-        #[Assert\Length(min: 10, max: 10, exactMessage: 'Tax id number is invalid.')]
-        public string $companyTaxIdNumber,
-        #[Assert\NotBlank()]
-        public string $name,
-        #[Assert\NotBlank()]
-        public string $surname,
-        #[Assert\NotBlank()]
-        #[Assert\Email]
-        public string $email,
-        public ?string $phone,
-        #[Assert\NotBlank()]
-        #[Assert\Type('integer')]
+        #[Assert\NotBlank(message: 'employeeId is required')]
+        #[Assert\Type('integer', message: 'employeeId should integer.')]
+        #[Assert\Positive(message: 'employeeId should be a positive integer.')]
         public int $employeeId,
+        #[Assert\NotBlank(message: 'companyId is required')]
+        #[Assert\Type('integer', message: 'companyId should integer.')]
+        #[Assert\Positive(message: 'companyId should be a positive integer.')]
+        public int $companyId,
+        public ?string $name,
+        public ?string $surname,
+        public ?string $email,
+        public ?string $phone,
     ) {
-        parent::__construct(
-            $this->companyTaxIdNumber,
-            $this->name,
-            $this->surname,
-            $this->email,
-            $this->phone,
-        );
     }
 }

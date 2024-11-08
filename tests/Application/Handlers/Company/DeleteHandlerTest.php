@@ -7,18 +7,19 @@ namespace App\Tests\Application\Handlers\Company;
 use App\Application\Command\Company\DeleteCompany;
 use App\Application\Handlers\Company\DeleteCompanyHandler;
 use App\Application\Handlers\Exceptions\CommandHandlerException;
+use App\Tests\Application\Handlers\HandlersBaseTestCase;
 use PHPUnit\Framework\Attributes\Test;
 
-class DeleteCompanyHandlerTest extends CompanyHandlersBaseTestCase
+class DeleteHandlerTest extends HandlersBaseTestCase
 {
     #[Test]
     public function shouldHandleDeleteCompany(): void
     {
         $companyId = 123;
-        $this->repositoryMock->expects(self::once())->method('companyExists')->willReturn(true);
-        $this->repositoryMock->expects(self::once())->method('deleteCompany')->with($companyId);
+        $this->companyRepoMock->expects(self::once())->method('companyExists')->willReturn(true);
+        $this->companyRepoMock->expects(self::once())->method('deleteCompany')->with($companyId);
 
-        $sut = new DeleteCompanyHandler($this->repositoryMock);
+        $sut = new DeleteCompanyHandler($this->companyRepoMock);
 
         $sut->handle(new DeleteCompany($companyId));
     }
@@ -27,9 +28,9 @@ class DeleteCompanyHandlerTest extends CompanyHandlersBaseTestCase
     public function shouldNotDeleteCompanyWhileCompanyNotExists(): void
     {
         $companyId = 123;
-        $this->repositoryMock->expects(self::once())->method('companyExists')->willReturn(false);
+        $this->companyRepoMock->expects(self::once())->method('companyExists')->willReturn(false);
 
-        $sut = new DeleteCompanyHandler($this->repositoryMock);
+        $sut = new DeleteCompanyHandler($this->companyRepoMock);
 
         $this->expectException(CommandHandlerException::class);
         $this->expectExceptionMessage('Company not found.');

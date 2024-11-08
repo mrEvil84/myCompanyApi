@@ -6,9 +6,7 @@ namespace App\ReadModel;
 
 interface EmployeeReadModelRepository
 {
-    public function getCompanies(int $limit = 10, int $offset = 0): array;
+    public function getCompanyEmployees(int $companyId, int $limit = 10, int $offset = 0): array;
 
-    public function getCompanyByTaxIdNumber(string $taxIdNumber): array;
-
-    public function getCompanyEmployees(string $taxIdNumber, int $limit = 10, int $offset = 0): array;
+    public function getEmployee(int $employeeId): array;
 }

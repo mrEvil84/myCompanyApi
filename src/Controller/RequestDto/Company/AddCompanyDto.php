@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Controller\RequestDto;
+namespace App\Controller\RequestDto\Company;
 
 use App\Application\Command\Company\AddCompany;
 use Symfony\Component\Validator\Constraints as Assert;

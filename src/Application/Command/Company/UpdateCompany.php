@@ -2,17 +2,23 @@
 
 declare(strict_types=1);
 
-namespace App\Application\Command;
+namespace App\Application\Command\Company;
 
 readonly class UpdateCompany
 {
     public function __construct(
-        private ?string $taxIdNumber,
-        private ?string $name,
-        private ?string $address,
-        private ?string $city,
-        private ?string $postalCode,
+        private int $companyId,
+        private ?string $taxIdNumber = null,
+        private ?string $name = null,
+        private ?string $address = null,
+        private ?string $city = null,
+        private ?string $postalCode = null,
     ) {
+    }
+
+    public function getCompanyId(): int
+    {
+        return $this->companyId;
     }
 
     public function getTaxIdNumber(): ?string

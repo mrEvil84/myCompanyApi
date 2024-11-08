@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Controller\RequestDto;
+namespace App\Controller\RequestDto\Company;
 
 use App\Application\Command\Company\DeleteCompany;
 use Symfony\Component\Validator\Constraints as Assert;
@@ -10,14 +10,15 @@ use Symfony\Component\Validator\Constraints as Assert;
 readonly class DeleteCompanyDto
 {
     public function __construct(
-        #[Assert\NotBlank(message: 'Tax id number must be provided.')]
-        #[Assert\Length(min: 10, max: 10, exactMessage: 'Tax id number is invalid.')]
-        public string $taxIdNumber,
+        #[Assert\NotBlank(message: 'Company id is required.')]
+        #[Assert\Type('integer', message: 'Company id should be a positive integer.')]
+        #[Assert\Positive(message: 'Company should be a positive integer.')]
+        public int $companyId,
     ) {
     }
 
     public function getCommand(): DeleteCompany
     {
-        return new DeleteCompany($this->taxIdNumber);
+        return new DeleteCompany($this->companyId);
     }
 }

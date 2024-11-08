@@ -6,11 +6,11 @@ namespace App\Application\Handlers\Exceptions;
 
 use DomainException;
 
-class CommandException extends DomainException
+class CommandHandlerException extends DomainException
 {
     public static function taxIdNumberInvalid(): self
     {
-        return new self('Tax id number is invalid');
+        return new self('Tax id number is invalid.');
     }
 
     public static function companyNotFound(): self

@@ -7,27 +7,28 @@ namespace App\Tests\Application\Handlers\Company;
 use App\Application\Command\Company\ReplaceCompany;
 use App\Application\Handlers\Company\ReplaceCompanyHandler;
 use App\Application\Handlers\Exceptions\CommandHandlerException;
+use App\Tests\Application\Handlers\HandlersBaseTestCase;
 use PHPUnit\Framework\Attributes\Test;
 
-class ReplaceCompanyHandlerTest extends CompanyHandlersBaseTestCase
+class ReplaceHandlerTest extends HandlersBaseTestCase
 {
     #[Test]
     public function shouldReplace(): void
     {
         $companyId = 1234;
         $this
-            ->repositoryMock
+            ->companyRepoMock
             ->expects(self::once())
             ->method('companyExists')
             ->with($companyId)
             ->willReturn(true);
 
         $this
-            ->repositoryMock
+            ->companyRepoMock
             ->expects(self::once())
             ->method('updateCompany');
 
-        $sut = new ReplaceCompanyHandler($this->repositoryMock);
+        $sut = new ReplaceCompanyHandler($this->companyRepoMock);
 
         $sut->handle(new ReplaceCompany(
             '1234567890',
@@ -44,18 +45,18 @@ class ReplaceCompanyHandlerTest extends CompanyHandlersBaseTestCase
     {
         $companyId = 1234;
         $this
-            ->repositoryMock
+            ->companyRepoMock
             ->expects(self::once())
             ->method('companyExists')
             ->with($companyId)
             ->willReturn(false);
 
         $this
-            ->repositoryMock
+            ->companyRepoMock
             ->expects(self::once())
             ->method('addCompany');
 
-        $sut = new ReplaceCompanyHandler($this->repositoryMock);
+        $sut = new ReplaceCompanyHandler($this->companyRepoMock);
 
         $sut->handle(new ReplaceCompany(
             '1234567890',
@@ -70,7 +71,7 @@ class ReplaceCompanyHandlerTest extends CompanyHandlersBaseTestCase
     #[Test]
     public function shouldNotHandleWhenTaxIdNumberInvalid(): void
     {
-        $sut = new ReplaceCompanyHandler($this->repositoryMock);
+        $sut = new ReplaceCompanyHandler($this->companyRepoMock);
 
         $this->expectException(CommandHandlerException::class);
         $this->expectExceptionMessage('Tax id number is invalid');

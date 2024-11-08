@@ -2,14 +2,14 @@
 
 declare(strict_types=1);
 
-namespace App\Application\Handlers;
+namespace App\Application\Handlers\Company;
 
 use App\Application\Command\Company\AddCompany;
-use App\Application\Exceptions\AddCompanyException;
+use App\Application\Handlers\Exceptions\CommandHandlerException;
 use App\DomainModel\CompanyRepository;
 use App\Entity\Company;
 
-readonly class AddCompanyHandler
+final readonly class AddCompanyHandler
 {
     public function __construct(private CompanyRepository $companyRepository)
     {
@@ -34,7 +34,7 @@ readonly class AddCompanyHandler
     {
         $taxIdNumberExists = $this->companyRepository->companyTaxIdNumberExists($command->getTaxIdNumber());
         if ($taxIdNumberExists) {
-            throw AddCompanyException::companyAlreadyExists();
+            throw CommandHandlerException::companyAlreadyExists();
         }
     }
 }

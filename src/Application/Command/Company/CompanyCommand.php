@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Application\Command;
+namespace App\Application\Command\Company;
 
 abstract readonly class CompanyCommand
 {
@@ -12,6 +12,7 @@ abstract readonly class CompanyCommand
         private string $address,
         private string $city,
         private string $postalCode,
+        private ?int $companyId = null,
     ) {
     }
 
@@ -38,5 +39,10 @@ abstract readonly class CompanyCommand
     public function getPostalCode(): string
     {
         return $this->postalCode;
+    }
+
+    public function getCompanyId(): ?int
+    {
+        return $this->companyId;
     }
 }

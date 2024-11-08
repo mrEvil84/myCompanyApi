@@ -7,20 +7,21 @@ namespace App\Tests\Application\Handlers\Company;
 use App\Application\Command\Company\AddCompany;
 use App\Application\Handlers\Company\AddCompanyHandler;
 use App\Application\Handlers\Exceptions\CommandHandlerException;
+use App\Tests\Application\Handlers\HandlersBaseTestCase;
 use PHPUnit\Framework\Attributes\Test;
 
-class AddCompanyHandlerTest extends CompanyHandlersBaseTestCase
+class AddHandlerTest extends HandlersBaseTestCase
 {
     #[Test]
     public function shouldHandle(): void
     {
         $this
-            ->repositoryMock
+            ->companyRepoMock
             ->expects($this->once())
             ->method('companyTaxIdNumberExists')
             ->willReturn(false);
 
-        $sut = new AddCompanyHandler($this->repositoryMock);
+        $sut = new AddCompanyHandler($this->companyRepoMock);
 
         $sut->handle(new AddCompany(
             '123',
@@ -35,12 +36,12 @@ class AddCompanyHandlerTest extends CompanyHandlersBaseTestCase
     public function shouldNotHandleWhenCompanyNotExists(): void
     {
         $this
-            ->repositoryMock
+            ->companyRepoMock
             ->expects($this->once())
             ->method('companyTaxIdNumberExists')
             ->willReturn(true);
 
-        $sut = new AddCompanyHandler($this->repositoryMock);
+        $sut = new AddCompanyHandler($this->companyRepoMock);
 
         $this->expectException(CommandHandlerException::class);
         $this->expectExceptionMessage('Company already exists');

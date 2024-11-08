@@ -12,7 +12,7 @@ class EmployeeControllerTest extends WebTestCase
     {
         $client = static::createClient([], ['HTTP_HOST' => '127.0.0.1:8000']);
 
-        $client->jsonRequest('GET', '/api/companies/10/0');
+        $client->jsonRequest('GET', '/api/employee', ['employeeId' => 2]);
 
         $content = $client->getResponse()->getContent();
         // here I check only is json is valid, normally we could test if count of elements equals expected

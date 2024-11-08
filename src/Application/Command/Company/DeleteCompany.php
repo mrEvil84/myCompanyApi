@@ -2,16 +2,16 @@
 
 declare(strict_types=1);
 
-namespace App\Application\Command;
+namespace App\Application\Command\Company;
 
 readonly class DeleteCompany
 {
-    public function __construct(private string $taxIdNumber)
+    public function __construct(private int $companyId)
     {
     }
 
-    public function getTaxIdNumber(): string
+    public function getCompanyId(): int
     {
-        return $this->taxIdNumber;
+        return $this->companyId;
     }
 }

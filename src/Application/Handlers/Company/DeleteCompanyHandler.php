@@ -2,13 +2,13 @@
 
 declare(strict_types=1);
 
-namespace App\Application\Handlers;
+namespace App\Application\Handlers\Company;
 
 use App\Application\Command\Company\DeleteCompany;
-use App\Application\Exceptions\DeleteCompanyException;
+use App\Application\Handlers\Exceptions\CommandHandlerException;
 use App\DomainModel\CompanyRepository;
 
-readonly class DeleteCompanyHandler
+final readonly class DeleteCompanyHandler
 {
     public function __construct(private CompanyRepository $companyRepository)
     {
@@ -16,29 +16,15 @@ readonly class DeleteCompanyHandler
 
     public function handle(DeleteCompany $command): void
     {
-        $this->assertTaxIdNumber($command->getTaxIdNumber());
         $this->assertCompanyExists($command);
-
-        $this->delete($command);
+        $this->companyRepository->deleteCompany($command->getCompanyId());
     }
 
     private function assertCompanyExists(DeleteCompany $command): void
     {
-        $taxIdNumberExists = $this->companyRepository->companyTaxIdNumberExists($command->getTaxIdNumber());
+        $taxIdNumberExists = $this->companyRepository->companyExists($command->getCompanyId());
         if (!$taxIdNumberExists) {
-            throw DeleteCompanyException::companyNotFound();
+            throw CommandHandlerException::companyNotFound();
         }
-    }
-
-    private function assertTaxIdNumber(string $getTaxIdNumber): void
-    {
-        if (strlen($getTaxIdNumber) < 10) {
-            throw DeleteCompanyException::taxIdNumberInvalid();
-        }
-    }
-
-    private function delete(DeleteCompany $command): void
-    {
-        $this->companyRepository->deleteCompany($command->getTaxIdNumber());
     }
 }

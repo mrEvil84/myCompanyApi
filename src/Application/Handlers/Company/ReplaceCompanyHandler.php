@@ -2,15 +2,15 @@
 
 declare(strict_types=1);
 
-namespace App\Application\Handlers;
+namespace App\Application\Handlers\Company;
 
 use App\Application\Command\Company\ReplaceCompany;
-use App\Application\Exceptions\ReplaceCompanyException;
+use App\Application\Handlers\Exceptions\CommandHandlerException;
 use App\Application\Shared\CompanyDto;
 use App\DomainModel\CompanyRepository;
 use App\Entity\Company;
 
-readonly class ReplaceCompanyHandler
+final readonly class ReplaceCompanyHandler
 {
     public function __construct(private CompanyRepository $companyRepository)
     {
@@ -19,34 +19,15 @@ readonly class ReplaceCompanyHandler
     public function handle(ReplaceCompany $command): void
     {
         $this->assertTaxIdNumber($command->getTaxIdNumber());
-        $this->assertCompanyExists($command);
 
-        if ($this->companyRepository->companyTaxIdNumberExists($command->getTaxIdNumber())) {
-            $this->replace($command);
+        if ($this->companyRepository->companyExists($command->getCompanyId())) {
+            $this->companyRepository->updateCompany(CompanyDto::fromCommand($command));
         } else {
-            $this->add($command);
+            $this->companyRepository->addCompany($this->getNewCompany($command));
         }
     }
 
-    private function assertCompanyExists(ReplaceCompany $command): void
-    {
-        $taxIdNumberExists = $this->companyRepository->companyTaxIdNumberExists($command->getTaxIdNumber());
-        if (!$taxIdNumberExists) {
-            throw ReplaceCompanyException::companyNotFound();
-        }
-    }
-
-    private function replace(ReplaceCompany $command): void
-    {
-        $this->companyRepository->updateCompany(CompanyDto::fromCommand($command));
-    }
-
-    private function add(ReplaceCompany $command): void
-    {
-        $this->companyRepository->addCompany($this->getEntity($command));
-    }
-
-    private function getEntity(ReplaceCompany $command): Company
+    private function getNewCompany(ReplaceCompany $command): Company
     {
         $company = new Company();
 
@@ -59,10 +40,10 @@ readonly class ReplaceCompanyHandler
         return $company;
     }
 
-    private function assertTaxIdNumber(string $getTaxIdNumber): void
+    private function assertTaxIdNumber(string $taxIdNumber): void
     {
-        if (strlen($getTaxIdNumber) < 10) {
-            throw ReplaceCompanyException::taxIdNumberInvalid();
+        if (strlen($taxIdNumber) !== 10) {
+            throw CommandHandlerException::taxIdNumberInvalid();
         }
     }
 }

@@ -6,12 +6,13 @@ namespace App\Controller\RequestDto\Employee;
 
 use Symfony\Component\Validator\Constraints as Assert;
 
-class EmployeeDto
+class AddEmployeeDto
 {
     public function __construct(
-        #[Assert\NotBlank(message: 'Tax id number is required')]
-        #[Assert\Length(min: 10, max: 10, exactMessage: 'Tax id number is invalid.')]
-        public string $companyTaxIdNumber,
+        #[Assert\NotBlank(message: 'companyId is required')]
+        #[Assert\Type('integer', message: 'companyId should be integer.')]
+        #[Assert\Positive(message: 'companyId should be a positive integer.')]
+        public int $companyId,
         #[Assert\NotBlank(message: 'Name is required')]
         public string $name,
         #[Assert\NotBlank(message: 'Surname is required')]

@@ -1,8 +1,21 @@
 <?php
 
-namespace App\ReadModel;
+declare(strict_types=1);
 
-class GetCompanyExmployees
+namespace App\ReadModel\Query;
+
+readonly class GetCompanyExmployees extends CompanyQuery
 {
+    public function __construct(
+        private int $companyId,
+        int $limit = 10,
+        int $offset = 0,
+    ) {
+        parent::__construct($limit, $offset);
+    }
 
+    public function getCompanyId(): int
+    {
+        return $this->companyId;
+    }
 }

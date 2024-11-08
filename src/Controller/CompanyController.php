@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\Controller;
 
+use App\Application\Command\Company\ReplaceCompany;
+use App\Application\Command\Company\UpdateCompany;
 use App\Application\CompanyService;
 use App\Controller\RequestDto\Company\AddCompanyDto;
 use App\Controller\RequestDto\Company\DeleteCompanyDto;
@@ -17,7 +19,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Attribute\MapRequestPayload;
 use Symfony\Component\Routing\Annotation\Route;
 
-class MyCompanyController extends AbstractController
+class CompanyController extends AbstractController
 {
     public function __construct(
         private readonly CompanyService $companyService,
@@ -45,7 +47,7 @@ class MyCompanyController extends AbstractController
     )]
     public function getCompanyDetails(#[MapRequestPayload] GetCompanyDetailsDto $companyDetailsDto): Response
     {
-        return $this->json($this->companyReadModel->getCompany($companyDetailsDto->taxIdNumber));
+        return $this->json($this->companyReadModel->getCompany($companyDetailsDto->companyId));
     }
 
     #[Route('/api/company', name: 'api_add_company', methods: ['POST'])]
@@ -63,8 +65,17 @@ class MyCompanyController extends AbstractController
     public function replaceCompany(#[MapRequestPayload] ReplaceCompanyDto $replaceCompanyDto): Response
     {
         try {
-            $this->companyService->replaceCompany($replaceCompanyDto->getCommand());
-            return $this->json([], Response::HTTP_ACCEPTED);
+            $command = new ReplaceCompany(
+                $replaceCompanyDto->taxIdNumber,
+                $replaceCompanyDto->name,
+                $replaceCompanyDto->address,
+                $replaceCompanyDto->city,
+                $replaceCompanyDto->postalCode,
+                $replaceCompanyDto->companyId
+            );
+
+            $this->companyService->replaceCompany($command);
+            return $this->json([], Response::HTTP_CREATED);
         } catch (\Exception $exception) {
             return $this->json(['error' => $exception->getMessage()], Response::HTTP_BAD_REQUEST);
         }
@@ -74,8 +85,16 @@ class MyCompanyController extends AbstractController
     public function updateCompany(#[MapRequestPayload] UpdateCompanyDto $updateCompanyDto): Response
     {
         try {
-            $this->companyService->updateCompany($updateCompanyDto->getCommand());
-            return $this->json([], Response::HTTP_ACCEPTED);
+            $command = new UpdateCompany(
+                $updateCompanyDto->companyId,
+                $updateCompanyDto->taxIdNumber,
+                $updateCompanyDto->name,
+                $updateCompanyDto->address,
+                $updateCompanyDto->city,
+                $updateCompanyDto->postalCode
+            );
+            $this->companyService->updateCompany($command);
+            return $this->json([], Response::HTTP_OK);
         } catch (\Exception $exception) {
             return $this->json(['error' => $exception->getMessage()], Response::HTTP_BAD_REQUEST);
         }
@@ -86,7 +105,7 @@ class MyCompanyController extends AbstractController
     {
         try {
             $this->companyService->deleteCompany($deleteCompanyDto->getCommand());
-            return $this->json([], Response::HTTP_ACCEPTED);
+            return $this->json([], Response::HTTP_OK);
         } catch (\Exception $exception) {
             return $this->json(['error' => $exception->getMessage()], Response::HTTP_BAD_REQUEST);
         }
