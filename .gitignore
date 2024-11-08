@@ -32,3 +32,4 @@ phpstan.neon
 .phpunit.result.cache
 /tests/phpunit.xml
 ###< symfony/phpunit-bridge ###
+/.php-cs-fixer.dist.php

@@ -1,0 +1,18 @@
+version: '3.4'
+
+services:
+  # DATABASE CONTAINER
+  my_company_api_db:
+    container_name: "${DB_CONTAINER_NAME}"
+    image: 'mysql:8.0.15'
+    command: '--default-authentication-plugin=mysql_native_password --character-set-server=utf8mb4 --collation-server=utf8mb4_general_ci'
+    restart: always
+    ports:
+      - "${PORT_PREFIX}06:3306"
+    volumes:
+      - "${DATA_DIR}/database:/var/lib/mysql:rw"
+    environment:
+      - "MYSQL_ROOT_PASSWORD=${DATABASE_ROOT_PASSWORD}"
+      - "MYSQL_DATABASE=${DATABASE_NAME}"
+      - "MYSQL_USER=${DATABASE_USER}"
+      - "MYSQL_PASSWORD=${DATABASE_PASSWORD}"
