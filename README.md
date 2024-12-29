@@ -1,5 +1,9 @@
 # myCompanyApi
 
+## Description
+A example of rest api app with some endpoints, with one domain.
+Two entities Company , Employee.
+
 ## How to set up project (in ubuntu)
 ### install php 8.3+
 ### install make 
@@ -22,7 +26,6 @@ php bin/console doctrine:migrations:migrate
 ```
 cd ./myCompanyApi
 /bin/php vendor/phpunit/phpunit/phpunit --bootstrap tests/bootstrap.php --configuration tests/phpunit.xml tests --teamcity 
-
 ```
 
 
